@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpotFind</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Animate.css CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body class="min-h-screen font-sans overflow-x-hidden relative">
+  <!-- Wave Background -->
+  <div class="wave-layer">
+    <svg class="waves wave-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path fill="rgba(59, 130, 246, 0.5)" d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,149.3C672,149,768,203,864,213.3C960,224,1056,192,1152,165.3C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+    </svg>
+    <svg class="waves wave-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path fill="rgba(96, 165, 250, 0.4)" d="M0,224L48,213.3C96,203,192,181,288,176C384,171,480,181,576,197.3C672,213,768,235,864,213.3C960,192,1056,128,1152,122.7C1248,117,1344,171,1392,197.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+    </svg>
+    <svg class="waves wave-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path fill="rgba(147, 197, 253, 0.3)" d="M0,192L48,181.3C96,171,192,149,288,160C384,171,480,213,576,229.3C672,245,768,235,864,202.7C960,171,1056,117,1152,106.7C1248,96,1344,128,1392,144L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+    </svg>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav class="flex justify-end p-4">
+    <div class="space-x-4">
+      <button id="profileBtn" class="text-purple-800"><i class="fas fa-user"></i></button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div id="app" class="container mx-auto p-4 relative">
+    <!-- Intro Screen -->
+    <div id="intro" class="text-center page">
+      <h1 class="text-6xl font-bold text-purple-800 mb-6 animate__animated animate__fadeIn animate__delay-1s">SpotFind</h1>
+      <p class="text-xl text-gray-700 mb-4 animate__animated animate__slideInUp animate__delay-2s">
+        Find Your Parking Spot in Seconds
+      </p>
+      <p class="text-lg text-gray-600 max-w-md mx-auto mb-8 animate__animated animate__slideInUp animate__delay-3s">
+        SpotFind helps you locate available parking spots on campus quickly and effortlessly. Powered by AshTech.
+      </p>
+      <button id="getStartedBtn" class="inline-block bg-purple-800 text-white py-3 px-6 rounded-lg shadow-lg hover:bg-purple-900 transition duration-300 animate__animated animate__bounceIn animate__delay-4s">
+        Get Started <i class="fas fa-arrow-right ml-2"></i>
+      </button>
+    </div>
+
+    <!-- Welcome (Sign-In) Screen -->
+    <div id="welcome" class="text-center page hidden">
+      <h1 class="text-5xl font-bold text-purple-800 mb-4">SpotFind</h1>
+      <img src="https://via.placeholder.com/200x100" alt="Car Icon" class="mx-auto mb-4">
+      <p class="text-lg text-gray-700">powered by AshTech</p>
+      <div class="mt-8">
+        <h2 class="text-2xl font-semibold">Create an account</h2>
+        <p class="text-gray-600 mt-2">Enter your email to sign up for this app</p>
+        <input id="emailInput" type="email" placeholder="Email" class="block w-full max-w-xs mx-auto p-2 mt-4 border rounded">
+        <input id="idInput" type="text" placeholder="Student/Staff ID" class="block w-full max-w-xs mx-auto p-2 mt-2 border rounded">
+        <button id="continueBtn" class="bg-black text-white p-2 w-full max-w-xs mx-auto mt-4 rounded block">Continue</button>
+        <p class="text-sm text-purple-800 mt-2">By clicking continue, you agree to our Terms of Service and Privacy Policy</p>
+      </div>
+    </div>
+
+    <!-- Map Screen -->
+    <div id="map" class="hidden text-center page">
+      <h1 class="text-2xl font-bold mb-4 animate__animated animate__fadeInDown">Parking Map</h1>
+      <p class="text-sm text-gray-600 mb-2">Available <span class="text-teal-500">●</span> (>50%) | Limited <span class="text-orange-500">●</span> (10-50%) | Full <span class="text-red-500">●</span> (<10%)</p>
+      <p class="text-sm text-gray-600 mb-4">Student <span class="text-blue-500">●</span> | Staff <span class="text-blue-500">●</span> | Visitor <span class="text-blue-500">●</span> | Handicapped <span class="text-blue-500">●</span></p>
+      <div class="bg-white p-4 rounded-lg shadow-lg max-w-md mx-auto animate__animated animate__zoomIn">
+        <svg width="100%" height="200" viewBox="0 0 300 200" class="mx-auto">
+          <rect x="0" y="0" width="300" height="200" fill="#f0f0f0" />
+          <circle cx="50" cy="50" r="15" fill="teal" class="parking-spot animate__animated animate__fadeIn" data-spot="A1" data-status="available" />
+          <circle cx="100" cy="50" r="15" fill="red" class="parking-spot animate__animated animate__fadeIn animate__delay-1s" data-spot="A2" data-status="full" />
+          <circle cx="150" cy="50" r="15" fill="teal" class="parking-spot animate__animated animate__fadeIn animate__delay-2s" data-spot="A3" data-status="available" />
+          <circle cx="200" cy="50" r="15" fill="orange" class="parking-spot animate__animated animate__fadeIn animate__delay-3s" data-spot="A4" data-status="limited" />
+          <circle cx="250" cy="50" r="15" fill="teal" class="parking-spot animate__animated animate__fadeIn animate__delay-4s" data-spot="A5" data-status="available" />
+          <circle cx="50" cy="100" r="15" fill="red" class="parking-spot animate__animated animate__fadeIn" data-spot="B1" data-status="full" />
+          <circle cx="100" cy="100" r="15" fill="teal" class="parking-spot animate__animated animate__fadeIn animate__delay-1s" data-spot="B2" data-status="available" />
+          <circle cx="150" cy="100" r="15" fill="orange" class="parking-spot animate__animated animate__fadeIn animate__delay-2s" data-spot="B3" data-status="limited" />
+          <circle cx="200" cy="100" r="15" fill="red" class="parking-spot animate__animated animate__fadeIn animate__delay-3s" data-spot="B4" data-status="full" />
+          <circle cx="250" cy="100" r="15" fill="teal" class="parking-spot animate__animated animate__fadeIn animate__delay-4s" data-spot="B5" data-status="available" />
+          <circle cx="50" cy="150" r="15" fill="teal" class="parking-spot animate__animated animate__fadeIn" data-spot="C1" data-status="available" />
+          <circle cx="100" cy="150" r="15" fill="orange" class="parking-spot animate__animated animate__fadeIn animate__delay-1s" data-spot="C2" data-status="limited" />
+          <circle cx="150" cy="150" r="15" fill="teal" class="parking-spot animate__animated animate__fadeIn animate__delay-2s" data-spot="C3" data-status="available" />
+          <circle cx="200" cy="150" r="15" fill="red" class="parking-spot animate__animated animate__fadeIn animate__delay-3s" data-spot="C4" data-status="full" />
+          <circle cx="250" cy="150" r="15" fill="teal" class="parking-spot animate__animated animate__fadeIn animate__delay-4s" data-spot="C5" data-status="available" />
+          <text x="50" y="50" text-anchor="middle" dy="5" font-size="10" fill="white">A1</text>
+          <text x="100" y="50" text-anchor="middle" dy="5" font-size="10" fill="white">A2</text>
+          <text x="150" y="50" text-anchor="middle" dy="5" font-size="10" fill="white">A3</text>
+          <text x="200" y="50" text-anchor="middle" dy="5" font-size="10" fill="white">A4</text>
+          <text x="250" y="50" text-anchor="middle" dy="5" font-size="10" fill="white">A5</text>
+          <text x="50" y="100" text-anchor="middle" dy="5" font-size="10" fill="white">B1</text>
+          <text x="100" y="100" text-anchor="middle" dy="5" font-size="10" fill="white">B2</text>
+          <text x="150" y="100" text-anchor="middle" dy="5" font-size="10" fill="white">B3</text>
+          <text x="200" y="100" text-anchor="middle" dy="5" font-size="10" fill="white">B4</text>
+          <text x="250" y="100" text-anchor="middle" dy="5" font-size="10" fill="white">B5</text>
+          <text x="50" y="150" text-anchor="middle" dy="5" font-size="10" fill="white">C1</text>
+          <text x="100" y="150" text-anchor="middle" dy="5" font-size="10" fill="white">C2</text>
+          <text x="150" y="150" text-anchor="middle" dy="5" font-size="10" fill="white">C3</text>
+          <text x="200" y="150" text-anchor="middle" dy="5" font-size="10" fill="white">C4</text>
+          <text x="250" y="150" text-anchor="middle" dy="5" font-size="10" fill="white">C5</text>
+        </svg>
+      </div>
+      <div class="mt-4 p-4 bg-white rounded-lg shadow-lg max-w-md mx-auto transform hover:scale-105 transition-transform duration-300 animate__animated animate__slideInUp animate__delay-2s">
+        <h2 class="text-lg font-semibold">Find My Car</h2>
+        <p>Your car is parked at <span id="carLocation" class="text-gray-500">Not parked yet</span></p>
+        <button id="navigateBtn" class="bg-teal-500 text-white p-2 w-full mt-2 rounded animate__animated animate__rubberBand animate__delay-3s hover:bg-teal-600 transition-colors">Navigate My Car</button>
+      </div>
+    </div>
+
+    <!-- History Screen -->
+    <div id="history" class="hidden text-center page">
+      <h1 class="text-2xl font-bold mb-4">Parking History</h1>
+      <div class="flex justify-center space-x-4 mb-6">
+        <button class="bg-purple-200 p-2 rounded animate__animated animate__bounceIn animate__delay-1s">Today</button>
+        <button class="bg-purple-200 p-2 rounded animate__animated animate__bounceIn animate__delay-1s5s">This week</button>
+        <button class="bg-purple-200 p-2 rounded animate__animated animate__bounceIn animate__delay-2s">This month</button>
+      </div>
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold mb-4 animate__animated animate__slideInUp">Saved Locations</h2>
+        <div class="flex justify-center space-x-4 animate__animated animate__fadeInUp animate__delay-2s5s">
+          <div class="bg-white p-4 rounded-lg shadow w-40">
+            <img src="q" alt="Area C1" class="mx-auto mb-2">
+            <p class="text-sm">Area C1</p>
+            <p class="text-xs text-gray-500">Last visit: Today</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow w-40">
+            <img src="" alt="UOB P11" class="mx-auto mb-2">
+            <p class="text-sm">UOB P11</p>
+            <p class="text-xs text-gray-500">Last visit: Yesterday</p>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 bg-white rounded-lg shadow max-w-md mx-auto animate__animated animate__slideInUp animate__delay-3s">
+        <h2 class="text-lg font-semibold mb-2">Recent Activity</h2>
+        <p>Main campus - Area C1 <span class="bg-green-500 text-white p-1 rounded text-xs">Active</span></p>
+        <p class="text-sm">Started: 8:30 AM | Duration: 3h 25m | Cost: 1.00BD</p>
+      </div>
+    </div>
+
+    <!-- Parking Areas Screen -->
+    <div id="areas" class="hidden text-center page">
+      <div class="flex justify-center space-x-4 mb-4">
+        <button class="bg-gray-200 p-2 rounded">Campus A</button>
+        <button class="bg-blue-200 p-2 rounded">Campus B</button>
+      </div>
+      <p>Logged in as <span class="text-purple-800">Student - 202312456</span> <span class="bg-green-500 text-white p-1 rounded">Active</span></p>
+      <h1 class="text-2xl font-bold">Available Parking Areas</h1>
+      <div class="grid grid-cols-2 gap-4 mt-4 mx-auto w-3/4">
+        <div class="bg-blue-200 p-4 rounded-lg animate__animated animate__fadeIn animate__delay-1s">
+          <p>Area C1</p>
+          <p>Student</p>
+          <div class="w-full bg-gray-200 rounded">
+            <div class="bg-blue-600 text-xs leading-none py-1 text-center text-white" style="width: 45%">45%</div>
+          </div>
+          <p>78 spots available</p>
+          <button class="text-blue-600">view</button>
+        </div>
+        <div class="bg-blue-200 p-4 rounded-lg animate__animated animate__fadeIn animate__delay-1s5s">
+          <p>Area C2</p>
+          <p>Student</p>
+          <div class="w-full bg-gray-200 rounded">
+            <div class="bg-blue-600 text-xs leading-none py-1 text-center text-white" style="width: 75%">75%</div>
+          </div>
+          <p>32 spots available</p>
+          <button class="text-blue-600">view</button>
+        </div>
+        <div class="bg-blue-200 p-4 rounded-lg animate__animated animate__fadeIn animate__delay-2s">
+          <p>Area C3</p>
+          <p>Student</p>
+          <div class="w-full bg-gray-200 rounded">
+            <div class="bg-red-600 text-xs leading-none py-1 text-center text-white" style="width: 95%">95%</div>
+          </div>
+          <p>5 spots available</p>
+          <button class="text-blue-600">view</button>
+        </div>
+        <div class="bg-blue-200 p-4 rounded-lg animate__animated animate__fadeIn animate__delay-2s5s">
+          <p>UOB P11</p>
+          <p>Student</p>
+          <div class="w-full bg-gray-200 rounded">
+            <div class="bg-blue-600 text-xs leading-none py-1 text-center text-white" style="width: 60%">60%</div>
+          </div>
+          <p>54 spots available</p>
+          <button class="text-blue-600">view</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Parking Map Full Screen -->
+    <div id="fullmap" class="hidden text-center page">
+      <input type="text" placeholder="search parking areas..." class="block w-full max-w-xs mx-auto p-2 mt-4 border rounded">
+      <h1 class="text-2xl font-bold">Parking Map</h1>
+      <p>Available <span class="text-green-500">●</span> (>50%) | Limited <span class="text-yellow-500">●</span> (10-50%) | Full <span class="text-red-500">●</span> (<10%)</p>
+      <p>Student <span class="text-blue-500">●</span> | Staff <span class="text-blue-500">●</span> | Visitor <span class="text-blue-500">●</span> | Handicapped <span class="text-blue-500">●</span></p>
+      <p>Total campus capacity: 1,250 Spots | currently available: 587 Spots (47%)</p>
+      <img src="https://via.placeholder.com/400x300" alt="Parking Map" class="mx-auto mt-4 animate__animated animate__zoomIn animate__delay-1s">
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div id="bottomNav" class="fixed bottom-0 w-full bg-white p-2 flex justify-around transition-all duration-300">
+    <button id="homeBtn" class="text-purple-800"><i class="fas fa-home"></i> Home</button>
+    <button id="mapBtn" class="text-purple-800"><i class="fas fa-map"></i> Map</button>
+    <button id="scanBtn" class="bg-purple-800 text-white p-2 rounded-full"><i class="fas fa-qrcode"></i></button>
+    <button id="historyBtn" class="text-purple-800"><i class="fas fa-history"></i> History</button>
+    <button id="profileBtnBottom" class="text-purple-800"><i class="fas fa-user"></i> Profile</button>
+  </div>
+
+  <!-- Background Animation and Styles -->
+  <style>
+    body {
+      background: linear-gradient(45deg, #e0f7fa, #a3bffa, #7dd3fc, #bfdbfe);
+      background-size: 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .parking-spot:hover {
+      opacity: 0.8;
+      cursor: pointer;
+    }
+
+    .parking-spot.selected {
+      stroke: #000;
+      stroke-width: 3;
+    }
+
+    .page {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      opacity: 1;
+      transform: translateY(-100%);
+      transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    }
+
+    .page.active {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .page.hidden {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+
+    #bottomNav.shrunk {
+      transform: scale(0.8);
+      padding: 0.5rem;
+    }
+
+    .wave-layer {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .waves {
+      width: 200%;
+      height: 70vh; /* Increased height to cover more of the screen */
+      position: absolute;
+      bottom: 0;
+    }
+
+    .wave-1 {
+      animation: wave 15s linear infinite;
+    }
+
+    .wave-2 {
+      animation: wave 12s linear infinite reverse;
+    }
+
+    .wave-3 {
+      animation: wave 18s linear infinite;
+    }
+
+    @keyframes wave {
+      0% { transform: translateX(0) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-20px); }
+      100% { transform: translateX(0) translateY(0); }
+    }
+  </style>
+
+  <script>
+    const screens = ['intro', 'welcome', 'map', 'history', 'areas', 'fullmap'];
+    let currentScreen = 'intro';
+
+    function showScreen(screenId) {
+      const current = document.getElementById(currentScreen);
+      const next = document.getElementById(screenId);
+
+      current.classList.remove('active');
+      current.classList.add('hidden');
+
+      next.classList.remove('hidden');
+      next.classList.add('active');
+
+      currentScreen = screenId;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('intro').classList.add('active');
+    });
+
+    document.getElementById('getStartedBtn').addEventListener('click', () => {
+      showScreen('welcome');
+    });
+
+    document.getElementById('continueBtn').addEventListener('click', () => {
+      const email = document.getElementById('emailInput').value.trim();
+      const id = document.getElementById('idInput').value.trim();
+
+      if (email && id) {
+        showScreen('map');
+        document.getElementById('carLocation').textContent = `Area C1 (Signed in at ${new Date().toLocaleTimeString()})`;
+      } else {
+        alert('Please enter both email and Student/Staff ID.');
+      }
+    });
+
+    document.querySelectorAll('.parking-spot').forEach(spot => {
+      spot.addEventListener('click', () => {
+        const spotId = spot.getAttribute('data-spot');
+        const status = spot.getAttribute('data-status');
+
+        if (status === 'available') {
+          document.querySelectorAll('.parking-spot').forEach(s => s.classList.remove('selected'));
+          spot.classList.add('selected');
+          document.getElementById('carLocation').textContent = `Spot ${spotId} (Selected at ${new Date().toLocaleTimeString()})`;
+        } else {
+          alert(`Spot ${spotId} is ${status}! Please choose an available spot.`);
+        }
+      });
+    });
+
+    document.getElementById('homeBtn').addEventListener('click', () => showScreen('welcome'));
+    document.getElementById('mapBtn').addEventListener('click', () => showScreen('map'));
+    document.getElementById('historyBtn').addEventListener('click', () => showScreen('history'));
+    document.getElementById('profileBtn').addEventListener('click', () => showScreen('areas'));
+    document.getElementById('profileBtnBottom').addEventListener('click', () => showScreen('areas'));
+    document.getElementById('scanBtn').addEventListener('click', () => showScreen('fullmap'));
+
+    // Toolbar Resize on Scroll
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const bottomNav = document.getElementById('bottomNav');
+
+      if (scrollTop > lastScrollTop) {
+        bottomNav.classList.add('shrunk');
+      } else {
+        bottomNav.classList.remove('shrunk');
+      }
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+    });
+  </script>
+</body>
+</html>
